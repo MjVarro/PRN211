@@ -1,0 +1,85 @@
+﻿
+<div class="container">
+
+    <div class="container">
+
+       
+        <div style="display:flex;justify-content:space-between"> 
+            <h2>Products List</h2>
+            <a class="navbar-brand ml-auto" href="/Product/CartView">
+                <img width="45" height="45" src="https://logowik.com/content/uploads/images/shopping-cart5929.jpg">
+                @if (Model.Cart != null)
+                {
+                    <span style="color:red">@Model.AmountCart</span>
+                }
+                else
+                {
+                    <span style="color:red">0</span>
+                }
+
+            </a>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <form method="get" asp-action="Index">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchQuery" placeholder="Search by product name" value="@Model.SearchQuery" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-4">
+                    Sort by:
+                    <a asp-action="Index" asp-route-sortBy="name" asp-route-searchQuery="@Model.SearchQuery">Name</a> |
+                    <a asp-action="Index" asp-route-sortBy="price" asp-route-searchQuery="@Model.SearchQuery">Price</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <img src="https://i.pinimg.com/564x/81/6d/cc/816dcc925a14ec91bc2258b883090c93.jpg" class="card-img-top" alt="Product Image">
+                        <div class="card-body">
+                            <h5 class="card-title">@product.ProductName</h5>
+                            <p class="card-text">
+                                Supplier: @product.Supplier?.CompanyName
+                                <br />
+                                Category: @product.Category?.CategoryName
+                                <br />
+                                Quantity per Unit: @product.QuantityPerUnit
+                                <br />
+                               
+                            <form method="post" asp-action="AddToCart" asp-route-productId="@product.ProductId">
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
+                            </p>
+                            <p class="card-text">Price: @product.UnitPrice.ToString("C")</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <!-- Pagination Links -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    @for (var i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-sortBy="@Model.SortBy" asp-route-searchQuery="@Model.SearchQuery">@i</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
